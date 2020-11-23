@@ -9,6 +9,12 @@
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
+        <div class="text-danger" id="hello">
+            @if (ViewBag.Error != null)
+            {
+                <p>Error: @ViewBag.Error</p>
+            }
+        </div>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -33,7 +39,7 @@
             <div class="col-md-10">
                 <select name="VenueId" id="VenueId" class="form-control dropdown" required>
                     <option value="" disabled selected>Select</option>
-                    <option value="Indoor">Indoor</option>
+                    @*<option value="Indoor">Indoor</option>*@
                 </select>
                 @Html.ValidationMessageFor(model => model.VenueId, "", new { @class = "text-danger" })
             </div>
@@ -43,7 +49,7 @@
                 @Html.Label("Guest", htmlAttributes: new { @class = "control-label" })
             </div>
             <div class="col-md-10">
-                <select name="GuestId" id="GuestId" class="form-control dropdown" >
+                <select name="GuestId" id="GuestId" class="form-control dropdown">
                     <option value="" disabled selected>Select</option>
                     @foreach (var item in Model.Guests)
                     {
@@ -58,7 +64,8 @@
                 @Html.Label("Usage Hours", htmlAttributes: new { @class = "control-label" })
             </div>
             <div class="col-md-10">
-                <input type="number" name="Hours" class="form-control" />
+                @*<input type="number" name="Hours" class="form-control" onchange="checkHours()"/>*@
+                @Html.EditorFor(model => model.Hours, new { htmlAttributes = new { @class = "form-control", onchange = "checkHours()" } })
                 @Html.ValidationMessageFor(model => model.Hours, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -67,12 +74,13 @@
                 @Html.Label("CheckIn Date and Time", htmlAttributes: new { @class = "control-label" })
             </div>
             <div class="col-md-10">
-                <input type="datetime" name="CheckIn" class="form-control" />
+                @*<input type="datetime" name="CheckIn" class="form-control" onchange="checkDate()" />*@
+                @Html.EditorFor(model => model.CheckIn, new { htmlAttributes = new { @class = "form-control", onchange = "checkDate()" } })
                 @Html.ValidationMessageFor(model => model.CheckIn, "", new { @class = "control-label" })
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-10">
                 <input type="submit" value="Create" class="btn btn-default form-control" />
             </div>
         </div>
@@ -117,5 +125,20 @@
                     }
                     spinner.className = "fa fa-spinner fa-spin hidden";
                 })
+    }
+    function checkDate() {
+        var selectedText = document.getElementById('CheckIn').value;
+        var selectedDate = new Date(selectedText);
+        var now = new Date();
+        if (selectedDate < now) {
+            alert("Date must be in the future!");
+        }
+    }
+    function checkHours() {
+        var numofhours = document.getElementById('Hours').value;
+        var uhf = document.getElementById('Hello');
+        if (numofhours < 1) {
+            alert("Minimum number of hours should be 1");
+        }
     }
 </script>
