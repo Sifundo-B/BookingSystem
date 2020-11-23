@@ -1,0 +1,64 @@
+﻿@model WebApplication9.Models.Venue
+
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Edit Venue</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.VenueType, htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-12">
+                <select name="VenueType" class="form-control dropdown">
+                    @foreach (var item in Model.VenueTypes)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.VenueType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                <input type="submit" value="Save" class="btn btn-default form-control" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

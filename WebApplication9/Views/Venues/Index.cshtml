@@ -1,0 +1,58 @@
+﻿@model IEnumerable<WebApplication9.Models.Venue>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>Available Venues</h3>
+
+<p>
+    @Html.ActionLink("Add New Venue", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VenueType)
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+        </th>*@
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VenueType)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>*@
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "fa fa-edit" }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "fa fa-detail" } ) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" } )
+        </td>
+        </tr>
+    }
+
+</table>

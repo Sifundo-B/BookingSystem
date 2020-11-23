@@ -1,0 +1,121 @@
+﻿@model WebApplication9.Models.VenueUsage
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h4>Book A Venue</h4>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label("Venue Type", htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-12">
+                <select name="VenueType" id="VenueType" class="form-control dropdown" onchange="LoadVenueByType()">
+                    <option value="" disabled selected>Selected</option>
+                    @foreach (var item in Model.VenueTypes)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+                <span id="spinner" class="fa fa-spinner fa-spin hidden"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label("Venue", htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                <select name="VenueId" id="VenueId" class="form-control dropdown" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="Indoor">Indoor</option>
+                </select>
+                @Html.ValidationMessageFor(model => model.VenueId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label("Guest", htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                <select name="GuestId" id="GuestId" class="form-control dropdown" >
+                    <option value="" disabled selected>Select</option>
+                    @foreach (var item in Model.Guests)
+                    {
+                        <option value="@item.Id">@item.UserName</option>
+                    }
+                </select>
+                @Html.ValidationMessageFor(model => model.GuestId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label("Usage Hours", htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                <input type="number" name="Hours" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Hours, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label("CheckIn Date and Time", htmlAttributes: new { @class = "control-label" })
+            </div>
+            <div class="col-md-10">
+                <input type="datetime" name="CheckIn" class="form-control" />
+                @Html.ValidationMessageFor(model => model.CheckIn, "", new { @class = "control-label" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default form-control" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script>
+    var spinner = document.getElementById("spinner");
+    var Select_Venue = document.getElementById("VenueId");
+    var Select_Type = document.getElementById("VenueType");
+
+    function LoadVenueByType() {
+        spinner.className = "fa fa-spinner fa-spin";
+        for (var i = 0; i < Select_Type.length; i++) {
+            Select_Venue.remove(i);
+        }
+        Select_Venue.innerHTML = "<option value='' disabled selected>Select</option>";
+
+        var formdata = {
+            "VenueType": Select_Type.value
+        };
+
+        if (Select_Type.value != null)
+            $.post("/VenueUsages/Venues",
+                formdata,
+                function (data, status) {
+                    if (status == "success") {
+                        for (var i = 0; i < data.Venues.length; i++) {
+                            let venue = data.Venues[i];
+                            Select_Venue.innerHTML +=
+                                "<option value='" + venue.Id + "'>" + venue.Name + "</option>";
+                        }
+                    } else {
+                        alert(status);
+                    }
+                    spinner.className = "fa fa-spinner fa-spin hidden";
+                })
+    }
+</script>
